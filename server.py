@@ -18,10 +18,10 @@ class Battlesnake(object):
         # TIP: If you open your Battlesnake URL in browser you should see this data
         return {
             "apiversion": "1",
-            "author": "",  # TODO: Your Battlesnake Username
-            "color": "#0A1931",  # TODO: Personalize
-            "head": "tiger-king",  # TODO: Personalize
-            "tail": "bolt",  # TODO: Personalize
+            "author": "akash-sr",  
+            "color": "#0A1931",  
+            "head": "tiger-king", 
+            "tail": "bolt",  
         }
 
     @cherrypy.expose
