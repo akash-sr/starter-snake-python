@@ -48,6 +48,7 @@ class Battlesnake(object):
         possible_moves = ["up", "down", "left", "right"]
         # List of safe moves 
         safe_moves = self.getSafeMoves(possible_moves, me, board)
+        print(safe_moves)
         if safe_moves:
             move = random.choice(safe_moves)
             return {"move":move}
