@@ -43,11 +43,11 @@ class Battlesnake(object):
         # extract the board information from the data
         board = data["board"]
         # extract my snake's information from the data
-        me = data["you"]
+        body = data["you"]["body"]
         # Choose a random direction to move in
         possible_moves = ["up", "down", "left", "right"]
         # List of safe moves 
-        safe_moves = self.getSafeMoves(possible_moves, me, board)
+        safe_moves = self.getSafeMoves(possible_moves, body, board)
         # print(safe_moves)
         if safe_moves:
             move = random.choice(safe_moves)
@@ -55,17 +55,39 @@ class Battlesnake(object):
         # default choice
         return {"move":"up"}
 
-    def getSafeMoves(self, possible_moves, me, board):
+    def getNext(self, currentHead, guess):
+        # returns the coordinates of the head if "guess" is taken as the next move
+        futureHead = currentHead.copy()
+        if guess=="up":
+            futureHead["y"]+=1
+        elif guess=="down":
+            futureHead["y"]-=1
+        elif guess=="left":
+            futureHead["x"]-=1
+        elif guess=="right":
+            futureHead["x"]+=1
+        return futureHead
+
+    def avoidsWalls(self, head, x, y):
+        # checks if the guessed move avoids walls
+        if head["x"] >= x or head["x"] < 0 :
+            return False
+        elif head["y"] >= y or head["y"] < 0:
+            return False
+        return True
+
+    def avoidsSnakes(self, head, board):
+        # checks if the guessed move avoids snakes
+        return True
+
+    def getSafeMoves(self, possible_moves, body, board):
+        #  populates the safe moves list
         safe_moves =[]
-        for move in possible_moves:
-            if move=="up" and me["head"]["y"]+1 < board["height"]:
-                safe_moves.append(move)
-            elif move=="down" and me["head"]["y"]-1 >= 0:
-                safe_moves.append(move)
-            elif move=="left" and me["head"]["x"]+1 < board["width"]:
-                safe_moves.append(move)
-            elif move=="right" and me["head"]["x"]-1 >= 0:
-                safe_moves.append(move)
+        for guess in possible_moves:
+            # body[0] gives the coordinates for the head
+            guessCoord = self.getNext(body[0], guess)
+            if self.avoidsWalls(guessCoord, board["height"], board["weight"]) and self.avoidsSnakes(guessCoord, board):
+                safe_moves.append(guess)
         return safe_moves
     @cherrypy.expose
     @cherrypy.tools.json_in()
