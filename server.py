@@ -68,7 +68,7 @@ class Battlesnake(object):
             futureHead["x"] = currentHead["x"]+1
         return futureHead
 
-    def avoidsWalls(self, head, x, y):
+    def avoidsWalls(self, head, y, x):
         # checks if the guessed move avoids walls
         if head["x"] >= x or head["x"] < 0 :
             return False
@@ -76,7 +76,7 @@ class Battlesnake(object):
             return False
         return True
 
-    def avoidsSnakes(self, head, board):
+    def avoidsSnakes(self, head, snakes):
         # checks if the guessed move avoids snakes
         return True
 
@@ -86,7 +86,7 @@ class Battlesnake(object):
         for guess in possible_moves:
             # body[0] gives the coordinates for the head
             guessCoord = self.getNext(me["head"], guess)
-            if self.avoidsWalls(guessCoord, board["height"], board["weight"]) and self.avoidsSnakes(guessCoord, board):
+            if self.avoidsWalls(guessCoord, board["height"], board["width"]) and self.avoidsSnakes(guessCoord, board["snakes"]):
                 safe_moves.append(guess)
         return safe_moves
     @cherrypy.expose
