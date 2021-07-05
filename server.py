@@ -78,6 +78,9 @@ class Battlesnake(object):
 
     def avoidsSnakes(self, head, snakes):
         # checks if the guessed move avoids snakes
+        for snake in snakes:
+            if head in snake["body"]:
+                return False
         return True
 
     def getSafeMoves(self, possible_moves, me, board):
