@@ -43,11 +43,11 @@ class Battlesnake(object):
         # extract the board information from the data
         board = data["board"]
         # extract my snake's information from the data
-        body = data["you"]["body"]
+        me = data["you"]
         # Choose a random direction to move in
         possible_moves = ["up", "down", "left", "right"]
         # List of safe moves 
-        safe_moves = self.getSafeMoves(possible_moves, body, board)
+        safe_moves = self.getSafeMoves(possible_moves, me, board)
         # print(safe_moves)
         if safe_moves:
             move = random.choice(safe_moves)
@@ -59,13 +59,13 @@ class Battlesnake(object):
         # returns the coordinates of the head if "guess" is taken as the next move
         futureHead = currentHead.copy()
         if guess=="up":
-            futureHead["y"]+=1
+            futureHead["y"] = currentHead["y"]+1
         elif guess=="down":
-            futureHead["y"]-=1
+            futureHead["y"] = currentHead["y"]-1
         elif guess=="left":
-            futureHead["x"]-=1
+            futureHead["x"] = currentHead["x"]-1
         elif guess=="right":
-            futureHead["x"]+=1
+            futureHead["x"] = currentHead["x"]+1
         return futureHead
 
     def avoidsWalls(self, head, x, y):
@@ -80,12 +80,12 @@ class Battlesnake(object):
         # checks if the guessed move avoids snakes
         return True
 
-    def getSafeMoves(self, possible_moves, body, board):
+    def getSafeMoves(self, possible_moves, me, board):
         #  populates the safe moves list
         safe_moves =[]
         for guess in possible_moves:
             # body[0] gives the coordinates for the head
-            guessCoord = self.getNext(body[0], guess)
+            guessCoord = self.getNext(me["head"], guess)
             if self.avoidsWalls(guessCoord, board["height"], board["weight"]) and self.avoidsSnakes(guessCoord, board):
                 safe_moves.append(guess)
         return safe_moves
