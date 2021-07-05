@@ -79,7 +79,8 @@ class Battlesnake(object):
     def avoidsSnakes(self, head, snakes):
         # checks if the guessed move avoids snakes
         for snake in snakes:
-            if head in snake["body"]:
+            # [:-1] cuz the current tail will no longer be present in the next move
+            if head in snake["body"][:-1]:
                 return False
         return True
 
