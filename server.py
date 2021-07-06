@@ -49,17 +49,15 @@ class Battlesnake(object):
         # List of safe moves 
         safe_moves = self.getSafeMoves(possible_moves, mySnake, board)
         # List of moves with food 
-        food_moves = self.getFoodMoves(possible_moves, mySnake, board)
+        food_moves = self.getFoodMoves(safe_moves, mySnake, board)
         # print(safe_moves)
-        if safe_moves:
-            for move in safe_moves:
-                if move in food_moves:
-                    return {"move":move}
-            # if there are no possible food moves select a random one
+        if food_moves:
+            move = random.choice(food_moves)
+        elif safe_moves: 
             move = random.choice(safe_moves)
-            return {"move":move}
         # default choice
-        return {"move":"up"}
+        else : 
+            return {"move":"up"}
 
     def getNext(self, currentHead, guess):
         # returns the coordinates of the head if "guess" is taken as the next move
@@ -109,9 +107,9 @@ class Battlesnake(object):
                 return False
         return True
 
-    def getFoodMoves(self, possible_moves, mySnake, board):
+    def getFoodMoves(self, safe_moves, mySnake, board):
         food_moves = []
-        for guess in possible_moves:
+        for guess in safe_moves:
             guessCoord = self.getNext(mySnake["head"], guess)
             if guessCoord in board["food"]:
                 food_moves.append(guess)
