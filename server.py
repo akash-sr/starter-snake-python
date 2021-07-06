@@ -56,7 +56,7 @@ class Battlesnake(object):
                 if move in food_moves:
                     return {"move":move}
             # if there are no possible food moves select a random one
-            move = random.choice(possible_moves)
+            move = random.choice(safe_moves)
             return {"move":move}
         # default choice
         return {"move":"up"}
