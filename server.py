@@ -95,12 +95,12 @@ class Battlesnake(object):
     def avoidConsumption(self, head, mySnake, snakes):
         if len(snakes)<2:
             return True
-        else :
-            for snake in snakes:
-                if snake == mySnake:
-                    continue
-                elif head in self.getAllMoves(snake["head"]):
-                    return False
+        myLength = mySnake["length"]
+        for snake in snakes:
+            if snake == mySnake:
+                continue
+            elif head in self.getAllMoves(snake["head"]) and myLength <= snake["length"]:
+                return False
         return True
 
     def getSafeMoves(self, possible_moves, mySnake, board):
