@@ -48,9 +48,15 @@ class Battlesnake(object):
         possible_moves = ["up", "down", "left", "right"]
         # List of safe moves 
         safe_moves = self.getSafeMoves(possible_moves, mySnake, board)
+        # List of moves with food 
+        food_moves = self.getFoodMoves(possible_moves, mySnake, board)
         # print(safe_moves)
         if safe_moves:
-            move = random.choice(safe_moves)
+            for move in safe_moves:
+                if move in food_moves:
+                    return {"move":move}
+            # if there are no possible food moves select a random one
+            move = random.choice(possible_moves)
             return {"move":move}
         # default choice
         return {"move":"up"}
@@ -103,6 +109,14 @@ class Battlesnake(object):
                 return False
         return True
 
+    def getFoodMoves(self, possible_moves, mySnake, board):
+        food_moves = []
+        for guess in possible_moves:
+            guessCoord = self.getNext(mySnake["head"], guess)
+            if guessCoord in board["food"]:
+                food_moves.append(guess)
+        return food_moves
+
     def getSafeMoves(self, possible_moves, mySnake, board):
         # !!Need to add squad support as well
         #  populates the safe moves list
@@ -113,6 +127,7 @@ class Battlesnake(object):
             if self.avoidsWalls(guessCoord, board["height"], board["width"]) and self.avoidsSnakes(guessCoord, board["snakes"]) and self.avoidConsumption(guessCoord, mySnake, board["snakes"]):
                 safe_moves.append(guess)
         return safe_moves
+
     @cherrypy.expose
     @cherrypy.tools.json_in()
     def end(self):
