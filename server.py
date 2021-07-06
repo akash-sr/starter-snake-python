@@ -43,11 +43,11 @@ class Battlesnake(object):
         # extract the board information from the data
         board = data["board"]
         # extract my snake's information from the data
-        me = data["you"]
+        mySnake = data["you"]
         # Choose a random direction to move in
         possible_moves = ["up", "down", "left", "right"]
         # List of safe moves 
-        safe_moves = self.getSafeMoves(possible_moves, me, board)
+        safe_moves = self.getSafeMoves(possible_moves, mySnake, board)
         # print(safe_moves)
         if safe_moves:
             move = random.choice(safe_moves)
@@ -83,13 +83,34 @@ class Battlesnake(object):
                 return False
         return True
 
-    def getSafeMoves(self, possible_moves, me, board):
+    def getAllMoves(self, coord):
+        # returns all possible coordinates given inital coordinate
+        return [
+            {"x": coord["x"], "y": coord["y"]+1},   # up
+            {"x": coord["x"], "y": coord["y"]-1},   # down
+            {"x": coord["x"]+1, "y": coord["y"]},   # right
+            {"x": coord["x"]-1, "y": coord["y"]}    # left
+        ]
+
+    def avoidConsumption(self, head, mySnake, snakes):
+        if len(snakes)<2:
+            return True
+        else :
+            for snake in snakes:
+                if snake == mySnake:
+                    continue
+                elif head in self.getAllMoves(snake["head"]):
+                    return False
+        return True
+
+    def getSafeMoves(self, possible_moves, mySnake, board):
+        # !!Need to add squad support as well
         #  populates the safe moves list
         safe_moves =[]
         for guess in possible_moves:
             # body[0] gives the coordinates for the head
-            guessCoord = self.getNext(me["head"], guess)
-            if self.avoidsWalls(guessCoord, board["height"], board["width"]) and self.avoidsSnakes(guessCoord, board["snakes"]):
+            guessCoord = self.getNext(mySnake["head"], guess)
+            if self.avoidsWalls(guessCoord, board["height"], board["width"]) and self.avoidsSnakes(guessCoord, board["snakes"]) and self.avoidConsumption(guessCoord, mySnake, board["snakes"]):
                 safe_moves.append(guess)
         return safe_moves
     @cherrypy.expose
