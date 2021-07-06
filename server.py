@@ -57,7 +57,8 @@ class Battlesnake(object):
             move = random.choice(safe_moves)
         # default choice
         else : 
-            return {"move":"up"}
+            move = "up"
+        return {"move":move}
 
     def getNext(self, currentHead, guess):
         # returns the coordinates of the head if "guess" is taken as the next move
